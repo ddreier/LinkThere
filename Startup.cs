@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
+using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using LinkThere.Models;
 
 namespace LinkThere
 {
@@ -28,6 +30,13 @@ namespace LinkThere
         {
             // Add framework services.
             services.AddMvc();
+
+            services.AddEntityFramework()
+                .AddSqlite()
+                .AddDbContext<LinkThereContext>(options =>
+                {
+                    options.UseSqlite(Configuration["DbConnectionString"]);
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,9 +67,16 @@ namespace LinkThere
                     template: adminRoute + "/{action=Index}/{id?}",
                     defaults: new { controller = "Admin" }
                 );
+                // wildcard route from https://github.com/aspnet/Mvc/issues/3084
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    name: "links",
+                    template: "{*anything}",
+                    defaults: new { controller = "Link", action = "Get" },
+                    constraints: new { anything = @"^(.*)?$" }
+                );
+                //routes.MapRoute(
+                //    name: "default",
+                //    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
 
