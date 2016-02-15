@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using LinkThere.Models;
+using System.IO;
 
 namespace LinkThere
 {
@@ -35,7 +36,7 @@ namespace LinkThere
                 .AddSqlite()
                 .AddDbContext<LinkThereContext>(options =>
                 {
-                    options.UseSqlite(Configuration["DbConnectionString"]);
+                    options.UseSqlite("Data Source=" + Configuration["DbPath"]);
                 });
         }
 

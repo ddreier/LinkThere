@@ -1,5 +1,23 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model IEnumerable<LinkThere.Models.Link>
+
+<h2>Link List</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th style="width: 8%;">Action</th>
+            <th>Key</th>
+            <th>URL</th>
+            <th style="width: 10%;">Click Count</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><a class="btn delete-asset btn-danger btn-sm" href="@(Url.Action("Delete", "Admin") + '/' + item.Id.ToString())"><i class="glyphicon glyphicon-trash"></i></a></td>
+            <td>@Html.DisplayFor(modelItem => item.Key)</td>
+            <td>@Html.DisplayFor(modelItem => item.LinkUrl)</td>
+            <td>@Html.DisplayFor(modelItem => item.ClickCount)</td>
+        </tr>
+    }
+</table>
