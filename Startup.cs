@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using LinkThere.Models;
 using System.IO;
+using Microsoft.AspNet.StaticFiles;
+using Microsoft.AspNet.Http;
 
 namespace LinkThere
 {
@@ -57,7 +59,10 @@ namespace LinkThere
 
             app.UseIISPlatformHandler();
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                RequestPath = new PathString(Configuration["SubDir"])
+            });
 
             string adminRoute = Configuration["AdminRoute"].ToString();
 
