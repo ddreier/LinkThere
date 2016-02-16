@@ -59,10 +59,7 @@ namespace LinkThere
 
             app.UseIISPlatformHandler();
 
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                RequestPath = new PathString(Configuration["SubDir"])
-            });
+            app.UseStaticFiles();
 
             string adminRoute = Configuration["AdminRoute"].ToString();
 
