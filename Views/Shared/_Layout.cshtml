@@ -17,31 +17,21 @@
         </environment>
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-controller="Home" asp-action="Index" class="navbar-brand">LinkThere</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a asp-controller="Admin" asp-action="Index">List</a></li>
-                        <li><a asp-controller="Admin" asp-action="Add">Add</a></li>
+        <div class="container-fluid body-content">
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <div class="row">
+                        <h1 style="padding-left: 10px;">LinkThere Admin</h1>
+                    </div>
+                    <ul class="nav nav-sidebar">
+                        <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")"><a asp-controller="Admin" asp-action="Index">List</a></li>
+                        <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Add" ? "active" : "")"><a asp-controller="Admin" asp-action="Add">Add</a></li>
                     </ul>
                 </div>
+                <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    @RenderBody()
+                </div>
             </div>
-        </div>
-        <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; 2016 - LinkThere</p>
-            </footer>
         </div>
 
         <environment names="Development">

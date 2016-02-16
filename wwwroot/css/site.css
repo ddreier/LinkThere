@@ -1,7 +1,7 @@
-body {
+/*body {
     padding-top: 50px;
     padding-bottom: 20px;
-}
+}*/
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
@@ -21,4 +21,11 @@ textarea {
 .carousel-caption p {
     font-size: 20px;
     line-height: 1.4;
+}
+
+.sidebar {
+    background-color: #f5f5f5;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
 }
