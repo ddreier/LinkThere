@@ -39,6 +39,7 @@ namespace LinkThere.Models
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "The Link URL is required")]
         [Url(ErrorMessage = "The Link URL must be a valid URL")]
+        [Display(Name = "URL")]
         public string LinkUrl { get; set; }
 
         public int ClickCount { get; set; }
