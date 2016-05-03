@@ -40,6 +40,8 @@ namespace LinkThere
                 {
                     options.UseSqlite("Data Source=" + Configuration["DbPath"]);
                 });
+
+            services.AddInstance<IConfiguration>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,23 +59,29 @@ namespace LinkThere
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            // Get some settings
+            string baseUrl = Configuration["AppUrl"].ToString();
+            string adminRoute = baseUrl + Configuration["AdminRoute"].ToString();
+
             app.UseIISPlatformHandler();
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = baseUrl
+            });
 
-            string adminRoute = Configuration["AdminRoute"].ToString();
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "admin",
-                    template: adminRoute + "/{action=Index}/{id?}",
+                    template: adminRoute.Substring(1) + "/{action=Index}/{id?}",
                     defaults: new { controller = "Admin" }
                 );
                 // wildcard route from https://github.com/aspnet/Mvc/issues/3084
                 routes.MapRoute(
                     name: "links",
-                    template: "{*anything}",
+                    template: baseUrl.Substring(1) + "/{*anything}",
                     defaults: new { controller = "Link", action = "Get" },
                     constraints: new { anything = @"^(.*)?$" }
                 );

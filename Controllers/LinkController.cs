@@ -21,7 +21,7 @@ namespace LinkThere.Controllers
 
         public IActionResult Get()
         {
-            string requestKey = Request.Path.Value.Substring(1);
+            string requestKey = Request.Path.Value.Substring(Request.Path.Value.LastIndexOf('/') + 1);
             var results = _context.Links.Where(l => l.Key == requestKey);
             
             if (results.Count() > 0)
@@ -36,7 +36,7 @@ namespace LinkThere.Controllers
             }
         }
 
-        private void IncrementLinkClickCount(Link link)
+        private async void IncrementLinkClickCount(Link link)
         {
             bool saveFailed;
             do
@@ -47,7 +47,7 @@ namespace LinkThere.Controllers
 
                 try
                 {
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException e)
                 {
