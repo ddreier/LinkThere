@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.Data.Entity;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using LinkThere.Models;
 using System.IO;
-using Microsoft.AspNet.StaticFiles;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Http;
 
 namespace LinkThere
 {
@@ -21,8 +21,9 @@ namespace LinkThere
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables();
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json");
+
             Configuration = builder.Build();
         }
 
@@ -34,14 +35,10 @@ namespace LinkThere
             // Add framework services.
             services.AddMvc();
 
-            services.AddEntityFramework()
-                .AddSqlite()
-                .AddDbContext<LinkThereContext>(options =>
-                {
-                    options.UseSqlite("Data Source=" + Configuration["DbPath"]);
-                });
+            services.AddDbContext<LinkThereContext>(options =>
+                options.UseSqlite("Data Source=" + Configuration["DbPath"]));
 
-            services.AddInstance<IConfiguration>(Configuration);
+            services.AddSingleton<IConfiguration>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,8 +59,6 @@ namespace LinkThere
             // Get some settings
             string baseUrl = Configuration["AppUrl"].ToString();
             string adminRoute = baseUrl + Configuration["AdminRoute"].ToString();
-
-            app.UseIISPlatformHandler();
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -92,6 +87,16 @@ namespace LinkThere
         }
 
         // Entry point for the application.
-        public static void Main(string[] args) => Microsoft.AspNet.Hosting.WebApplication.Run<Startup>(args);
+        public static void Main(string[] args)
+        {
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
+        }
     }
 }

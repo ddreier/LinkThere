@@ -1,8 +1,8 @@
-using System;
-using Microsoft.Data.Entity;
-using Microsoft.Data.Entity.Infrastructure;
-using Microsoft.Data.Entity.Metadata;
-using Microsoft.Data.Entity.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using LinkThere.Models;
 
 namespace LinkThere.Migrations
@@ -13,7 +13,7 @@ namespace LinkThere.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc1-16348");
+                .HasAnnotation("ProductVersion", "1.0.0-rc2-20901");
 
             modelBuilder.Entity("LinkThere.Models.Link", b =>
                 {
@@ -33,6 +33,8 @@ namespace LinkThere.Migrations
 
                     b.HasIndex("Key")
                         .IsUnique();
+
+                    b.ToTable("Links");
                 });
         }
     }
